@@ -1,0 +1,37 @@
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+import matplotlib.pyplot as plt
+----------------------------------------------------------------------------------
+# Load the MNIST Fashion dataset
+(X_train, y_train), (X_test, y_test) = keras.datasets.fashion_mnist.load_data()
+
+# Normalize pixel values between 0 and 1
+X_train = X_train / 255.0
+X_test = X_test / 255.0
+----------------------------------------------------------------------------------------
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10, activation='softmax')
+])
+--------------------------------------------------------------------------------------
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+              metrics=['accuracy'])
+-----------------------------------------------------------------------------------------
+model.fit(X_train, y_train, epochs=10, batch_size=32)
+-------------------------------------------------------------------------------------------
+test_loss, test_acc = model.evaluate(X_test, y_test)
+print('Test accuracy:', test_acc)
+------------------------------------------------------------------------------------------------
+predictions = model.predict(X_test)
+---------------------------------------------------------------------------------------------
+labels = ['t_shirt', 'trouser', 'pullover', 'dress', 'coat', 'sandal', 'shirt', 'sneaker', 'bag', 'ankle_boots']
+
+predictions = model.predict(X_test[:1])
+label = labels[np.argmax(predictions)]
+
+print(label)
+plt.imshow(X_test[:1][0])
+plt.show
